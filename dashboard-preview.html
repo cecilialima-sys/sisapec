@@ -32,7 +32,7 @@
     <div id="root"></div>
 
     <script>
-      const sourceFile = "./sisapec_redesign_dashboard%20(1).jsx";
+      const sourceFile = "./sisapec_redesign_dashboard.jsx";
 
       function iconStub(label) {
         return function Icon(props) {
@@ -49,27 +49,7 @@
       function buildPrelude() {
         return `
 const { useMemo, useState } = React;
-
-const motion = new Proxy(
-  {},
-  {
-    get: (_, tag) =>
-      function MotionTag({
-        children,
-        initial,
-        animate,
-        exit,
-        transition,
-        whileHover,
-        whileTap,
-        layout,
-        ...props
-      }) {
-        return React.createElement(tag, props, children);
-      },
-  }
-);
-
+const motion = new Proxy({}, { get: (_, tag) => function MotionTag({ children, initial, animate, exit, transition, whileHover, whileTap, layout, ...props }) { return React.createElement(tag, props, children); } });
 const Bell = window.__preview.iconStub("Bell");
 const Building2 = window.__preview.iconStub("Building2");
 const CalendarDays = window.__preview.iconStub("CalendarDays");
@@ -95,134 +75,35 @@ const Stethoscope = window.__preview.iconStub("Stethoscope");
 const UserCog = window.__preview.iconStub("UserCog");
 const UserPlus = window.__preview.iconStub("UserPlus");
 const Users = window.__preview.iconStub("Users");
-
-function Card({ className = "", children }) {
-  return <div className={className}>{children}</div>;
-}
-
-function CardHeader({ className = "", children }) {
-  return <div className={className}>{children}</div>;
-}
-
-function CardTitle({ className = "", children }) {
-  return <div className={className}>{children}</div>;
-}
-
-function CardContent({ className = "", children }) {
-  return <div className={className}>{children}</div>;
-}
-
-function Button({
-  className = "",
-  variant = "default",
-  size = "default",
-  children,
-  ...props
-}) {
-  const variantClass =
-    variant === "outline"
-      ? "border border-slate-200 bg-white text-slate-700"
-      : variant === "ghost"
-        ? "bg-transparent text-slate-700"
-        : variant === "secondary"
-          ? "bg-sky-50 text-sky-700"
-          : "bg-sky-600 text-white";
-
-  const sizeClass = size === "icon" ? "inline-flex h-10 w-10 items-center justify-center" : "inline-flex items-center justify-center";
-  return (
-    <button
-      {...props}
-      className={\`transition-colors \${variantClass} \${sizeClass} \${className}\`.trim()}
-    >
-      {children}
-    </button>
-  );
-}
-
-function Input({ className = "", ...props }) {
-  return <input {...props} className={\`w-full px-4 \${className}\`.trim()} />;
-}
-
-function Avatar({ className = "", children }) {
-  return <div className={\`inline-flex items-center justify-center rounded-full overflow-hidden \${className}\`.trim()}>{children}</div>;
-}
-
-function AvatarFallback({ className = "", children }) {
-  return <div className={\`flex h-full w-full items-center justify-center \${className}\`.trim()}>{children}</div>;
-}
-
-function Badge({ className = "", children }) {
-  return <span className={\`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium \${className}\`.trim()}>{children}</span>;
-}
-
-function Switch({ defaultChecked = false }) {
-  const [checked, setChecked] = useState(defaultChecked);
-  return (
-    <button
-      type="button"
-      aria-pressed={checked}
-      onClick={() => setChecked((value) => !value)}
-      className={\`relative inline-flex h-7 w-12 items-center rounded-full transition \${checked ? "bg-cyan-500" : "bg-slate-300"}\`}
-    >
-      <span
-        className={\`inline-block h-5 w-5 transform rounded-full bg-white transition \${checked ? "translate-x-6" : "translate-x-1"}\`}
-      />
-    </button>
-  );
-}
-
-function Label({ className = "", children, ...props }) {
-  return <label {...props} className={className}>{children}</label>;
-}
+function Card({ className = "", children }) { return <div className={className}>{children}</div>; }
+function CardHeader({ className = "", children }) { return <div className={className}>{children}</div>; }
+function CardTitle({ className = "", children }) { return <div className={className}>{children}</div>; }
+function CardContent({ className = "", children }) { return <div className={className}>{children}</div>; }
+function Button({ className = "", variant = "default", size = "default", children, ...props }) { const variantClass = variant === "outline" ? "border border-slate-200 bg-white text-slate-700" : variant === "ghost" ? "bg-transparent text-slate-700" : variant === "secondary" ? "bg-sky-50 text-sky-700" : "bg-sky-600 text-white"; const sizeClass = size === "icon" ? "inline-flex h-10 w-10 items-center justify-center" : "inline-flex items-center justify-center"; return <button {...props} className={\`transition-colors \${variantClass} \${sizeClass} \${className}\`.trim()}>{children}</button>; }
+function Input({ className = "", ...props }) { return <input {...props} className={\`w-full px-4 \${className}\`.trim()} />; }
+function Avatar({ className = "", children }) { return <div className={\`inline-flex items-center justify-center rounded-full overflow-hidden \${className}\`.trim()}>{children}</div>; }
+function AvatarFallback({ className = "", children }) { return <div className={\`flex h-full w-full items-center justify-center \${className}\`.trim()}>{children}</div>; }
+function Badge({ className = "", children }) { return <span className={\`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium \${className}\`.trim()}>{children}</span>; }
+function Switch({ defaultChecked = false }) { const [checked, setChecked] = useState(defaultChecked); return <button type="button" aria-pressed={checked} onClick={() => setChecked((value) => !value)} className={\`relative inline-flex h-7 w-12 items-center rounded-full transition \${checked ? "bg-cyan-500" : "bg-slate-300"}\`}><span className={\`inline-block h-5 w-5 transform rounded-full bg-white transition \${checked ? "translate-x-6" : "translate-x-1"}\`} /></button>; }
+function Label({ className = "", children, ...props }) { return <label {...props} className={className}>{children}</label>; }
 `;
       }
 
       async function bootstrap() {
         window.__preview = { iconStub };
-
         const response = await fetch(sourceFile);
-        if (!response.ok) {
-          throw new Error("Nao foi possivel carregar o arquivo JSX.");
-        }
-
+        if (!response.ok) throw new Error("Nao foi possivel carregar o arquivo JSX.");
         let source = await response.text();
         source = source.replace(/^import .*$/gm, "");
         source = source.replace("export default function SisapecRedesignDashboard()", "function SisapecRedesignDashboard()");
-
-        const wrappedSource = `
-${buildPrelude()}
-${source}
-
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<SisapecRedesignDashboard />);
-`;
-
-        const compiled = Babel.transform(wrappedSource, {
-          filename: "sisapec-preview.tsx",
-          sourceType: "script",
-          presets: [
-            ["react", { runtime: "classic" }],
-            ["typescript", { isTSX: true, allExtensions: true }],
-          ],
-          parserOpts: {
-            plugins: ["jsx", "typescript"],
-          },
-        }).code;
-
+        const wrappedSource = `${buildPrelude()}\n${source}\nconst root = ReactDOM.createRoot(document.getElementById("root"));\nroot.render(<SisapecRedesignDashboard />);`;
+        const compiled = Babel.transform(wrappedSource, { filename: "sisapec-preview.tsx", sourceType: "script", presets: [["react", { runtime: "classic" }], ["typescript", { isTSX: true, allExtensions: true }]], parserOpts: { plugins: ["jsx", "typescript"] } }).code;
         new Function("React", "ReactDOM", compiled)(React, ReactDOM);
       }
 
       bootstrap().catch((error) => {
         const root = document.getElementById("root");
-        root.innerHTML = `
-          <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;">
-            <div style="max-width:720px;background:#fff;border:1px solid #e2e8f0;border-radius:24px;padding:24px;box-shadow:0 18px 48px rgba(15,23,42,.08);">
-              <h1 style="margin:0 0 12px;font-size:24px;color:#0f172a;">Falha ao abrir o preview</h1>
-              <p style="margin:0 0 8px;color:#475569;">Verifique se este arquivo esta sendo aberto por um servidor local e se ha internet para carregar React e Tailwind via CDN.</p>
-              <pre style="margin:16px 0 0;padding:16px;background:#f8fafc;border-radius:16px;overflow:auto;color:#334155;">${String(error)}</pre>
-            </div>
-          </div>
-        `;
+        root.innerHTML = `<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;"><div style="max-width:720px;background:#fff;border:1px solid #e2e8f0;border-radius:24px;padding:24px;box-shadow:0 18px 48px rgba(15,23,42,.08);"><h1 style="margin:0 0 12px;font-size:24px;color:#0f172a;">Falha ao abrir o preview</h1><p style="margin:0 0 8px;color:#475569;">Verifique se a publicacao inclui o arquivo JSX e se ha internet para carregar React e Tailwind via CDN.</p><pre style="margin:16px 0 0;padding:16px;background:#f8fafc;border-radius:16px;overflow:auto;color:#334155;">${String(error)}</pre></div></div>`;
       });
     </script>
   </body>
